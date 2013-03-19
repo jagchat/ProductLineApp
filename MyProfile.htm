@@ -368,10 +368,9 @@
             var profilePage = new ProdLine.ClassMyProfilePage();
 
             $("#pgMyProfile").one("pagebeforeshow", function () {
-                alert(profilePage.CanShow());
                 if (!profilePage.CanShow()) {
                     $.mobile.changePage("Login.htm", {
-                        role: 'dialog',
+                        //role: 'dialog',
                         reloadPage: true,
                         type: 'get',
                         changeHash: false //or fromHashChange:true //cancelling popup should return to previous page

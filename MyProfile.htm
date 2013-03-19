@@ -181,7 +181,7 @@
                             <input id="pwdConfirm" type="password" class="ui-block-b" style="padding: 0.5em 0.5em 0.5em 0.5em"
                                 data-mini="true" />
                             <div class="ui-block-a" style="padding: 0.5em 0.5em 0.5em 0.0em">
-                                <div id="lblPwdInfoSaveMsg" style="display: none;color: #8B0000;">
+                                <div id="lblPwdInfoSaveMsg" style="display: none; color: #8B0000;">
                                     Try Again!</div>
                                 <a id="lnkUpdatePwd" href="#" data-role="button" data-inline="true" data-transition="flow"
                                     data-theme="b" data-mini="true">Update</a>
@@ -369,13 +369,16 @@
 
             $("#pgMyProfile").one("pagebeforeshow", function () {
                 if (!profilePage.CanShow()) {
-                    //                    $.mobile.changePage("Login.htm", {
-                    //                        //role: 'dialog',
-                    //                        reloadPage: true,
-                    //                        type: 'get',
-                    //                        changeHash: false //or fromHashChange:true //cancelling popup should return to previous page
-                    //                    });
 
+                    ////The following works in browser (as popup dialog). But does not work on device
+                    //$.mobile.changePage("Login.htm", {
+                    //    //role: 'dialog',
+                    //    reloadPage: true,
+                    //    type: 'get',
+                    //    changeHash: false //or fromHashChange:true //cancelling popup should return to previous page
+                    //});
+
+                    //changed to normal page using the following
                     $.mobile.changePage("LoginPage.htm");
                 }
             });

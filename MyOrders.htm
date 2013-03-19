@@ -47,11 +47,15 @@
         </div>
         <script type="text/javascript">
 
-            if (!ProdLine.Shared.ContextUser.IsLoggedIn()) {
-                $.mobile.changePage("Login.htm", {
-                    reloadPage: true,
-                    type: 'get'
-                });
+            if (!(ProdLine.Shared.ContextUser.IsLoggedIn() &&
+                ProdLine.Shared.ContextUser.IsSessionSecured())) {
+                //                $.mobile.changePage("Login.htm", {
+                //                    reloadPage: true,
+                //                    type: 'get'
+                //                });
+
+                //changed to normal page using the following
+                $.mobile.changePage("LoginPage.htm");
             }
 
             var pgMyOrdersInfoCallback = function (data) {

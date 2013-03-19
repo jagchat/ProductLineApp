@@ -131,12 +131,15 @@
 
                     lnkLoginToBuyNow.on('click', function () {
                         if (!canBuy()) {
-                            $.mobile.changePage("Login.htm", {
-                                role: 'dialog',
-                                reloadPage: true,
-                                type: 'get'
-                                //,changeHash: false //or fromHashChange:true //cancelling popup should return to previous page
-                            });
+                            //                            $.mobile.changePage("Login.htm", {
+                            //                                role: 'dialog',
+                            //                                reloadPage: true,
+                            //                                type: 'get'
+                            //                                //,changeHash: false //or fromHashChange:true //cancelling popup should return to previous page
+                            //                            });
+
+                            //changed to normal page using the following
+                            $.mobile.changePage("LoginPage.htm");
                             return;
                         }
                         showBuyButton();

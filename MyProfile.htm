@@ -368,6 +368,7 @@
             var profilePage = new ProdLine.ClassMyProfilePage();
 
             $("#pgMyProfile").one("pagebeforeshow", function () {
+                alert(profilePage.CanShow());
                 if (!profilePage.CanShow()) {
                     $.mobile.changePage("Login.htm", {
                         role: 'dialog',

@@ -8,27 +8,29 @@
     <script src="js/jqm.page.params.js" type="text/javascript"></script>
     <script src="js/purl.js" type="text/javascript"></script>
     <script src="js/Base64.js" type="text/javascript"></script>
-    <script src="js/Globals.js" type="text/javascript"></script>
-    <script src="js/ProdLineProvider.js" type="text/javascript"></script>
+    <script src="js/json2.js" type="text/javascript"></script>
+    <script src="js/ProdLine.Utils.js" type="text/javascript"></script>
+    <script src="js/ProdLine.Shared.js" type="text/javascript"></script>
+    <script src="js/ProdLine.Provider.js" type="text/javascript"></script>
 </head>
 <body>
     <div id="pgProdList" data-role="page" data-theme="d">
         <div data-role="header" data-theme="b">
-            <a href="index.htm" class="ui-btn-left" data-role="button" data-rel="back" data-theme="b">
-                Back</a>
+            <a href="#" class="ui-btn-left" data-icon="back" data-role="button" data-rel="back"
+                data-theme="b">Back</a>
             <h1>
                 Product Line</h1>
-            <a id="lnkMyProfile" href="MyProfile2.htm" data-icon="gear" class="ui-btn-right" data-theme="b">My Profile</a>
+            <a id="lnkMyProfile" href="MyProfile.htm" data-icon="gear" class="ui-btn-right" data-theme="b">
+                My Profile</a>
         </div>
         <div data-role="content" data-theme="d">
-            <ul id="lvProducts" data-role="listview" data-filter="true" data-divider-theme="d" data-filter-theme="d" data-theme="d">
+            <ul id="lvProducts" data-role="listview" data-filter="true" data-divider-theme="d"
+                data-filter-theme="d" data-theme="d">
             </ul>
         </div>
         <script type="text/javascript">
-            Globals.$CurrentPage = $("#pgProdList");
-            Globals.$CurrentPage.off();
-            
-            var LvProducts = $("#lvProducts", Globals.$CurrentPage[0]);
+
+            var LvProducts;
 
             function PgProdListGetProductsCallback(data) {
                 $.each(data, function (index, value) {
@@ -45,7 +47,8 @@
                         $.mobile.changePage(this.href, {
                             reloadPage: true,
                             type: 'get',
-                            data: { ProductId: value.ProductId }
+                            data: { ProductId: value.ProductId },
+                            transition: "slide"
                         });
                         return false;
                     });
@@ -53,22 +56,25 @@
                 });
 
                 LvProducts.listview('refresh');
+                $.mobile.loading('hide');
             }
-
-            Globals.$CurrentPage.on("pageshow", function () {
-                Globals.AddMyProfileLinkClickHandler("#lnkMyProfile");
+            
+            $("#pgProdList").one("pageshow", function () {
                 
+                $.mobile.loading('show');
+                //ProdLine.Shared.AddMyProfileLinkClickHandler("#lnkMyProfile");
+
+                LvProducts = $("#lvProducts", $.mobile.activePage[0]);
                 var currentCatId = $.url().param('CategoryId');
 
                 //add category header
-                $.when(ProdLineProvider.Category.GetCategoryInfo(currentCatId)).done(function (data) {
+                $.when(ProdLine.Provider.Category.GetCategoryInfo(currentCatId)).done(function (data) {
                     var liHeader = $("<li data-role='list-divider' role='heading' />");
                     liHeader.append($("<span>").text("Category: " + data.CategoryName + " (" + data.CategoryId + ")"));
                     LvProducts.append(liHeader);
-                    
-                    //add products only after header was added
-                    ProdLineProvider.Lists.GetProductsListWithCallback(currentCatId, "PgProdListGetProductsCallback");
 
+                    //add products only after header was added
+                    ProdLine.Provider.Lists.GetProductsListWithCallback(currentCatId, "PgProdListGetProductsCallback");
                 });
             });
 

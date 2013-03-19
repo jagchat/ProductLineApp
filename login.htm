@@ -8,56 +8,89 @@
     <script src="js/jqm.page.params.js" type="text/javascript"></script>
     <script src="js/purl.js" type="text/javascript"></script>
     <script src="js/Base64.js" type="text/javascript"></script>
-    <script src="js/Globals.js" type="text/javascript"></script>
-    <script src="js/ProdLineProvider.js" type="text/javascript"></script>
+    <script src="js/json2.js" type="text/javascript"></script>
+    <script src="js/ProdLine.Utils.js" type="text/javascript"></script>
+    <script src="js/ProdLine.Shared.js" type="text/javascript"></script>
+    <script src="js/ProdLine.Provider.js" type="text/javascript"></script>
 </head>
 <body>
     <div id="pgLogin" data-role="page" data-theme="d">
+        <!-- <div data-role="header" data-theme="b">
+            <a href="index.htm" class="ui-btn-left" data-icon="home" data-role="button" data-theme="b"
+                data-iconpos="notext" data-transition="slide"></a>
+            <h1>
+                Product Line</h1>
+        </div>-->
         <div data-role="content" data-theme="d">
             <form>
             <div style="padding: 10px 20px;">
                 <h3>
-                    Please sign in</h3>
+                    Please sign in:</h3>
                 <label for="un" class="ui-hidden-accessible">
                     Username:</label>
-                <input type="text" name="user" id="un" value="" placeholder="username" data-theme="a" />
+                <input type="email" name="user" id="un" value="" placeholder="username/email" data-theme="a" />
                 <label for="pw" class="ui-hidden-accessible">
                     Password:</label>
                 <input type="password" name="pass" id="pw" value="" placeholder="password" data-theme="a" />
                 <label id="lblTryAgain" style="color: #8B0000; display: none">
-                    Try Again!</label>
-                <a id="lnkSignIn" href="MyProfile.htm" data-role="button" data-inline="true" data-transition="flow"
-                    data-theme="b">Sign in</a> <a href="#" data-role="button" data-inline="true" data-rel="back"
-                        data-theme="c">Cancel</a>
+                    Try Again!<br />
+                </label>
+                <a id="lnkSignIn" href="MyProfile.htm" data-icon="check" data-role="button" data-inline="true"
+                    data-transition="flow" data-theme="b" data-mini="true">Sign in</a> <a href="#" data-icon="delete"
+                        data-role="button" data-inline="true" data-rel="back" data-theme="c" data-mini="true">
+                        Cancel</a> or <a id="lnkRegister" href="Register.htm" data-icon="plus" data-role="button"
+                            data-inline="true" data-transition="flow" data-theme="c" data-mini="true">Register</a><span
+                                style="font-size: x-small">(FREE)</span>
             </div>
             </form>
         </div>
         <script type="text/javascript">
-            Globals.$CurrentPage = $("#pgLogin");
-            Globals.$CurrentPage.off();
 
             var signInLink;
 
             function pgLoginSignInCallback(data) {
                 if (data == true) {
-                    //Globals.$CurrentPage.dialog("close");
-                    $.mobile.changePage(signInLink[0].href, {
-                        reloadPage: true,
-                        type: 'get'
-                    }, true, true);
+                    //$.mobile.activePage.dialog("close");
+                    if ($.url().param("ProductId") == null) {
+                        $.mobile.changePage(signInLink[0].href, {
+                            reloadPage: true,
+                            type: 'get',
+                            transition: "slide"
+                        }, true, true);
+                    } else {
+                        //$.url().data.attr["source"]
+                        //$.url().data.attr["fragment"]
+                        //$.url().data.attr["relative"]
+                        ////var url = $.url().data.attr["relative"];
+                        //////var trimLength = 17; //removing " #&ui-state=dialog"
+                        //////url = url.substring(0, url.length - trimLength);
+                        ////$.mobile.changePage(url, {
+                        ////    reloadPage: true,
+                        ////    type: 'get',
+                        ////    transition: "slide"
+                        ////}, true, true);
+                        window.history.go(-1);
+                    }
                 } else {
-                    $("#lblTryAgain", Globals.$CurrentPage[0]).show();
+                    $("#lblTryAgain", $.mobile.activePage[0]).show();
                 }
+                $.mobile.loading('hide');
             }
 
-            Globals.$CurrentPage.on("pageshow", function () {
-                signInLink = $("#lnkSignIn", Globals.$CurrentPage[0]);
+            $("#pgLogin").one("pageshow", function () {
+                $.mobile.loading('show');
+                if (ProdLine.Shared.ContextUser.IsLoggedIn()) {
+                    $("#un", $.mobile.activePage[0]).val(ProdLine.Shared.ContextUser.UserName);
+                }
+                signInLink = $("#lnkSignIn", $.mobile.activePage[0]);
                 signInLink.bind('click', function () {
+                    $.mobile.loading('show');
                     var userName = $("#un").val();
                     var password = $("#pw").val();
-                    ProdLineProvider.Customer.SignInWithCallback(userName, password, pgLoginSignInCallback);
+                    ProdLine.Provider.Customer.SignInWithCallback(userName, password, pgLoginSignInCallback);
                     return false;
                 });
+                $.mobile.loading('hide');
             });
 
         </script>

@@ -30,9 +30,9 @@
                     $.each(data, function (index, value) {
                         var li = $("<li />");
                         var prodListLink = $("<a href='ProdList.htm'>" + value.CategoryName + "</a>");
-                        var catImg = $("<img />");
+                        var catImg = $("<img src='" + value.ImageUrl + "' />");
                         var prodCount = $("<span class='ui-li-count'>" + value.ProductCount + "</span>");
-                        //prodListLink.append(catImg);
+                        prodListLink.append(catImg);
                         //prodListLink.append(catDesc);
                         prodListLink.append(prodCount);
                         li.append(prodListLink);
